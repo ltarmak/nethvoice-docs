@@ -2,12 +2,14 @@
 
 Applicazioni
 ============
+
 La sezione "Applicazioni" consente di creare, modificare o eliminare determinate funzionalità del centralino, che nel wizard vengono solo create e configurate, ma che poi vengono utilizzate nel CTI.
 
 Ad esempio le schede cliente, nel wizard, vengono configurate per accedere al database e per mostrare in maniera pratica le informazioni ottenute, ma il reale utilizzo sarà all'interno del CTI, durante le chiamate o durante la ricerca di determinate informazioni.
 
 Schede cliente
 --------------
+
 a sezione schede cliente, permette di raggruppare le informazioni presenti su database esterni al centralino e mostrarle in fase di chiamata. Ad esempio, sulla chiamata di un certo cliente, prendere le informazioni sul database relative alle sue fatture o ad eventuali insoluti e valutare ad esempio, se fornire assistenza o meno. Per generare una nuova scheda cliente i passi sono i seguenti
 
 Sorgenti
@@ -69,6 +71,7 @@ La variabile `$NUMBER` non è altro che il numero chiamante del centralino a cui
 
 Sorgenti video
 --------------
+
 In questa sezione è possibile configurare le sorgenti video o telecamere IP. Cliccando sul bottone "Crea nuova sorgente" è possibile compilare un form per la creazione:
 
 - Nome: specificare il nome da dare alla sorgente
@@ -79,6 +82,8 @@ In questa sezione è possibile configurare le sorgenti video o telecamere IP. Cl
 - Connessione: premere il bottone "Verifica" e verificare che l'URL inserito sia corretto, testando la connessione e ottenendo il frame video relativo.
 
 Una volta completata la compilazione del form premere "Salva" per salvare le informazioni e creare una nuova sorgente video.
+
+.. _external-phonebook:
 
 Aggiunta di rubriche esterne
 ----------------------------
@@ -124,6 +129,12 @@ CSV
   Il file CSV deve essere in codifica UTF-8 e contenere i nomi delle colonne sulla prima riga.
 
 Il pulsante :guilabel:`Verifica` consente la visualizzazione dell'anteprima dei dati prelevati dalla sorgente.
+
+Risoluzione nomi personalizzata
+...............................
+
+Nel caso si desiderasse utilizzare una sorgente diversa dalla rubrica centralizzata per risolvere i nomi, è possibile fare uno script custom di risoluzione e metterlo nella cartella `/usr/src/nethvoice/lookup.d`. 
+Nella cartella `/usr/src/nethvoice/samples/` ci sono due script di esempio `lookup_dummy.php` e `lookup_vte.php` che possono essere usati come spunto per creare il proprio personalizzato. Il primo restituisce un risultato finto qualunque numero chiami o sia chiamato, il secondo utilizza un'API esterna.
 
 Mappa
 .....
@@ -265,6 +276,8 @@ Tutti gli utenti che hanno quel profilo saranno abilitati all'utilizzo dell'URL 
 
     1. Ad un profilo può essere associato un solo URL.
     2. Affinché l'URL possa essere invocato è necessario che l'utente finale abbia abilitato la visualizzazione dei popups nel proprio browser !
+
+In alcuni casi può essere necessario eseguire un'API per poter formare l'URL che dovrà essere visualizzato dal CTI, per esempio se si deve aprire un URL che contiene un codice cliente, ma è necessario eseguire un API esterna per poter trovare il corretto codice cliente a partire dal numero di telefono. Per ottenere questo comportamento, è necessario creare uno script personalizzato. Si può prendere d'esempio lo script `/usr/src/nethvoice/parametrized_url_customercode.php`
 
 Gestione Multipla Interni
 -------------------------

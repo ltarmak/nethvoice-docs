@@ -1,27 +1,3 @@
-|product|: installazione codec g729
-===================================
-
-Se è già installato in |product| un codec g729, il seguente comando deve stampare ``INSTALLED``: ::
-
-  asterisk -rx 'core show translation' | grep -q g729 && echo INSTALLED
-
-.. warning::
-
-  Il riavvio del servizio ``asterisk`` causa la caduta delle chiamate in corso
-
-Per installare ed attivare il codec g729 di Intel eseguire i seguenti comandi: ::
-
-  yum install -y asterisk-codecs-g729
-  systemctl restart asterisk
-
-Il codec g729 di Intel non è compatibile con la versione a pagamento di Digium, 
-che si può installare seguendo la procedura che vi forniranno con l'acquisto,
-dopo aver disintallato il pacchetto ``asterisk-codecs-g729`` con il comando: ::
-
-  yum remove -y asterisk-codecs-g729
-  systemctl restart asterisk
-
-
 |product|: configurazione dell'IP locale
 ========================================
 
@@ -302,7 +278,7 @@ Riattivazione:
 
 .. code-block:: bash
 
-  config setprop nethcti-server AutoC2C auto
+  config setprop nethcti-server AutoC2C enabled
   signal-event nethcti-server3-update
 
 Modalità "Click2Call cloud"
@@ -558,13 +534,13 @@ Lo script verrà invocato tramite i seguenti parametri così come ricevuti da As
 
 .. code-block:: bash
 
-  "source, channel, endtime, duration, amaflags, uniqueid, callerid, starttime, answertime, destination, disposition, lastapplication, billableseconds, destinationcontext, destinationchannel"
+  "source, channel, endtime, duration, amaflags, uniqueid, callerid, starttime, answertime, destination, disposition, lastapplication, billableseconds, destinationcontext, destinationchannel, accountcode"
 
 Esempio:
 
 .. code-block:: bash
   
-  ./<SCRIPT_PATH> '200' 'PJSIP/200-00000000' '2019-01-17 18:05:13' '10' 'DOCUMENTATION' '1547744703.0' '"Alessandro Polidori" <200>' '2019-01-17 18:05:03' '2019-01-17 18:05:09' '201' 'ANSWERED' 'Dial' '3' 'ext-local' 'PJSIP/201-00000001' 
+  ./<SCRIPT_PATH> '200' 'PJSIP/200-00000000' '2019-01-17 18:05:13' '10' 'DOCUMENTATION' '1547744703.0' '"Alessandro Polidori" <200>' '2019-01-17 18:05:03' '2019-01-17 18:05:09' '201' 'ANSWERED' 'Dial' '3' 'ext-local' 'PJSIP/201-00000001' '201'
 
 
 Per attivare l'esecuzione di uno script eseguire:
@@ -588,6 +564,11 @@ Per disattivarlo eseguire:
 
 
 .. note:: Lo script deve essere eseguibile dall'utente "asterisk" e si consiglia di configurare opportunamente i permessi del file.
+
+Inviare i dettagli della chiamata tramite API
+.............................................
+
+Se si volesse usare uno script personalizzato per inviare i dettagli delle chiamate ad un servizio esterno utilizzando un'API, è possibile prendere spunto dallo script di esempio `/usr/src/nethvoice/samples/send_cdr_data.php`
 
 |product_cti|: eseguire uno script per ogni chiamata in ingresso dall'esterno
 =============================================================================

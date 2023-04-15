@@ -263,6 +263,7 @@ NethPhone
 
 * NP-X3
 * NP-X5
+* NP-X210
 
 
 Fanvil
@@ -296,7 +297,7 @@ Snom
 
 * D120
 * D305, D315, D345, D375, D385
-* D710, D712, D715, D717, D725, D735, D745, D765, D785
+* D710, D712, D713, D715, D717, D725, D735, D745, D765, D785
 
 Gigaset
 -------
@@ -352,7 +353,7 @@ produttore al primo avvio del telefono.
       - RPS
       - DHCP
       - 66 e 67
-      - ``http://IP_CENTRALINO`` e ``provisioning/{mac}.xml``
+      - ``http://IP_CENTRALINO/provisioning/{mac}.xml``
     * - Gigaset
       - DHCP [#f1]_
       - RPS

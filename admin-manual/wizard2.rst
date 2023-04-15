@@ -27,6 +27,7 @@ Per l'accesso iniziale utilizzare le credenziali
 
 Modalità utenti per il centralino
 =================================
+
 Una volta effettuato il login, se non è ancora stato configurato un account provider sulla macchina, l'interfaccia mostrerà la possibilità di scegliere se installare un account provider LDAP locale o configurarlo manualmente.
 
 Nel primo caso, non verranno richieste ulteriori configurazioni, mentre nel secondo si verrà rediretti all'interfaccia di |parent_product|, dove sarà possibile configurare il provider degli utenti.
@@ -35,16 +36,15 @@ Se il provider scelto non è locale, non sarà possibile creare gli utenti, che 
 
 Una volta scelta la modalità, si procede alla configurazione degli utenti.
 
-Utenti
-======
+Interni
+=======
+
 Il primo passo nella configurazione di |product| è definire la lista di utenti e l'abbinamento con il loro interno telefonico.
 
 In caso di account provider remoto in questa sezione comparirà l'elenco degli utenti che |parent_product| recupera remotamente.
 
 In caso di account provider locale in questa sezione comparirà invece l'elenco degli utenti l'elenco delgi utenti di |parent_product| e ci sarà la possibilità di crearne direttamente da qui di nuovi scegliendo username e il nome completo.
 
-Interni
--------
 È possibile ora inserire gli interni relativi per ogni utente:
 
 - Inserire il numero dell'interno (consigliato a partire dal numero 200) nel campo di testo
@@ -52,7 +52,7 @@ Interni
 - L'utente si evidenzia e una spunta verde compare se tutto è andato a buon fine
 
 Importazione utenti da csv
-..........................
+--------------------------
 
 Nei centralini che non usano un account provider esterno, è possibile importare gli utenti con un file CSV.
 
@@ -86,27 +86,60 @@ In questo caso, il campo *password* verrà ignorato.
 
 Il tasto esporta consente di scaricare un modello di CSV con gli attuali utenti da modificare per poi importare nuovamente. Le righe precedute da # verranno considerate commenti. I gruppi CTI, una lista separata da pipe `|` verranno creati automaticamente. Il profilo CTI deve essere scelto tra quelli già creati
 
-Gruppi
+Fasci
+=====
+
+Nella sezione fasci è possibile configurare i gateway per gestire le linee fisiche o creare fascio VoIP specificando le credenziali delle linee SIP date dal provider.
+
+I fasci, per collegare i gateway o le linee VoIP, vengono creati utilizzando la libreria PJSIP.
+
+.. _fisici:
+
+Fisici
 ------
-È possibile creare dei gruppi utente che poi saranno visibili e utilizzabili nelle applicazioni, come ad esempio nel |product_cti|
 
-- Cliccare il bottone "Crea nuovo gruppo"
-- Specificare un nome e salvare
-- Il gruppo compare tra la lista
+Come per i dispositivi questa sezione scansiona la rete di |product| e cerca dei gateway SIP supportati. Una volta individuati è possibile specificare:
 
-Profili
--------
-Il centralino prevede di specificare determinate funzionalità per ogni utente e queste funzionalità vengono raggruppate in dei profili.
+- Modello: specificare il modello del gateway
+- Impostazioni dinamiche in base al modello:
 
-Con l'installazione, vengono creati di default 3 profili che contengono l'abilitazione o meno a certe funzionalità.
+  * ISDN (Specificare per la linea se è Point-Point or Point-MultiPoint)
+  * PRI
+  * FXS (Specificare per ogni porta, l'interno da assegnare scegliendo un utente precedentemente configurato)
+  * FXO (Specificare direttamente il numero, nel campo di testo)
 
-- Base: funzionalità minime per l'utente
-- Standard: funzionalità di gestione classiche per l'utente
-- Avanzato: quasi tutte le funzionalità sono sbloccate, per l'utente Avanzato
+Una volta salvate le impostazioni è possibile caricare la configurazione sul gateway tramite il bottone "Carica"
+Il gateway scaricherà la configurazione da |product| e si riavvierà. Verranno inoltre creati i fasci relativi.
 
-È possibile creare anche nuovi profili, duplicando uno esistente o creandone di nuovi e specificando le varie funzionalità
+VoIP
+----
 
-.. note:: Ricordarsi di abilitare sui profili dove necessario l'accesso ai gruppi utente precedentemente creati.
+È possibile creare dei fasci VoIP selezionando uno dei provider supportati e inserendo le informazioni necessarie.
+
+Premere "Crea" per creare la configurazione relativa per quel fascio VoIP.
+
+Rotte
+=====
+
+Nella sezione rotte è possibile configurare le rotte in entrata e in uscita per il vostro centralino
+
+In entrata
+----------
+
+In questa sezione, viene mostrata la lista delle rotte già configurate, con la possibilità di modificarle o eliminarle.
+
+Premendo sul bottone "Crea nuova rotta" si aprirà un nuovo tab con l'applicazione Visual Plan, che vi consentirà di creare, modificare e collegare i componenti del centralino che gestiranno il flusso della chiamata per il numero in ingresso 
+
+Premendo il simbolo di spunta nell'applicazione Visual Plan, la configurazione della vostra rotta verrà salvata e da quel momento potrete ricevere chiamate che seguiranno il flusso da voi scelto.
+
+In uscita
+---------
+
+In questa sezione è presente la lista delle rotte in uscita. La prima volta che questa pagina viene visitata il wizard vi propone delle rotte in uscita di default, con i pattern di chiamata specifici per le diverse lingue.
+
+È possibile inoltre specificare l'ordine con cui verranno usati i fasci precedentemente creati, avendo quindi la possibilità di personalizzare la priorità dei vari fasci.
+
+Premendo il tasto "Salva" la configurazione viene scritta nel centralino e da quel momento è possibile effettuare chiamate verso l'esterno (avendo opportunamente configurato i fasci negli step precedenti).
 
 .. _wizard2-dispositivi:
 
@@ -216,7 +249,117 @@ i pannelli e le opzioni descritti in :ref:`wizard2-provisioning-section`.
 Configurazioni
 ==============
 
-La pagina :guilabel:`Configurazioni` stabilisce per ogni singolo utente le
+Gruppi
+------
+
+È possibile creare dei gruppi utente che poi saranno visibili e utilizzabili nelle applicazioni, come ad esempio nel |product_cti|
+
+- Cliccare il bottone "Crea nuovo gruppo"
+- Specificare un nome e salvare
+- Il gruppo comparirà nella lista
+
+Profili
+-------
+
+|product| consente di selezionare le funzionalità a cui ogni utente potrà accedere e queste vengono raggruppate in dei profili.
+
+Vengono creati di default 3 profili che contengono diversi livelli di funzionalità.
+
+- Base: funzionalità minime per l'utente
+- Standard: funzionalità di gestione classiche per l'utente
+- Avanzato: quasi tutte le funzionalità sono consentite, indicato per l'utente avanzato
+
+È possibile creare anche nuovi profili, duplicando uno esistente o creandone di nuovi e specificando le varie funzionalità
+
+.. note:: Ricordarsi di abilitare sui profili dove necessario l'accesso ai gruppi utente precedentemente creati.
+
+Permessi
+^^^^^^^^
+
+Impostazioni
+~~~~~~~~~~~~
+
+- il permesso generale abilita o disabilita l'accesso a tutte le funzionalità della sezione e le impostazioni generali di notifica
+- :guilabel:`DND`, abilita la configurazione del *non disturbare*
+- :guilabel:`Inoltro di chiamata`, abilita la configurazione dell'*inoltro di chiamata (deviazione)*
+- :guilabel:`Registrazione`, abilita la *registrazione* delle proprie conversazioni. È possibile anche *visualizzare/ascoltare/eliminare* le proprie registrazioni
+- :guilabel:`Conferenza`, abilita la creazione di *audio conferenze* in |product_cti|
+- :guilabel:`Parcheggi`, abilita la visualizzazione lo stato dei *parcheggi* e la possibilità di prendere le chiamate parcheggiate
+- :guilabel:`Chat`, abilita il servizio *chat* in |product_cti|
+- :guilabel:`Privacy`, abilita l'*oscuramento delle ultime 3 cifre* (modificabile da riga di comando) del numero chiamato e/o chiamante degli altri utenti in |product_cti|
+- :guilabel:`Condivisione Schermo`, abilitala condivisione dello schermo durante una chiamata effettuata tra due |product_cti|
+- :guilabel:`Pulsanti Telefono Fisico`, abilita la configurazione dei *tasti dei telefoni fisici* da parte dell'utentei in |product_cti|. Questi corrispondono ai Line Key mostrati nelle pagine :ref:`wizard2-dispositivi`
+- :guilabel:`Video Conference`, abilita la creazione di una *video conferenza* in |product_cti|
+
+Rotte in uscita
+~~~~~~~~~~~~~~~
+
+- vengono mostrate tutte le *rotte in uscita* configurate in |product| ed è possibile abilitare/disabilitare l'utilizzo singolarmente
+
+Rubrica
+~~~~~~~
+
+- il permesso generale abilita la visualizzazione della *rubrica* in |product_cti| e la possibilità di aggiungere contatti, modificare ed eliminare i contatti propri
+- :guilabel:`Rubrica Avanzata`, abilita la possibilità di modificare/eliminare anche i *contatti non propri* della rubrica in |product_cti|
+  
+Schede Cliente
+~~~~~~~~~~~~~~
+
+- il permesso generale abilita la possibilità di vedere sul |product_cti| la *scheda cliente*
+- per ogni sezione della *scheda cliente* è possibile abilitare/disabilitare la visualizzazione
+
+Pannello Presenza
+~~~~~~~~~~~~~~~~~
+
+- il permesso generale abilita la visualizzazione del pannello *operatori* in |product_cti|
+- :guilabel:`Ascolto`, abilita l'*ascolto* di chiamate di altri utenti
+- :guilabel:`Intrusione`, abilita l'*intromissione* in una chiamata di un altro utente (ascolto di chiamante e chiamato, conversazione solo con l'utente)
+- :guilabel:`Registrazione Avanzate`, abilita la *registrazione* di chiamate di altri utenti
+- :guilabel:`Pickup`, abilita la *risposta per assente* per chiamate di altri utenti
+- :guilabel:`Trasferiemnto Chiamata`, abilita il *trasferimento di chiamata* per chiamate di altri utenti 
+- :guilabel:`Parcheggio Avanzato`, abilita la possibilità di *parcheggiare* chiamate di altri utenti e di riprenderle
+- :guilabel:`Chiudi`, abilita la possibilità di *chiudere* le chiamate di altri utenti
+- :guilabel:`Linee Centralino`, abilita la visione in |product_cti| dello *stato dei fasci* configurati in |product|
+- :guilabel:`Telefono Avanzato`, abilita le *funzionalità del telefono* (chiudi, chiama, rispondi) sulle conversazioni che non appartengono all'utente
+- per ogni *gruppo di utenti* configurato in |product| è possibile abilitare/disabilitare la visualizzazione
+
+Pannello agente di coda
+~~~~~~~~~~~~~~~~~~~~~~~
+
+- il permesso generale abilita la sezione *Code* in |product_cti| con le informazioni delle code di appartenenza, la possibilità di fare login/logout ed entrare/uscire dalla pausa
+- :guilabel:`Pannello agente di coda avanzato`, abilita *informazioni avanzate* sullo stato delle code e degli agenti
+- :guilabel:`Chiamate non gestite`, abilita l'accesso alla sezione *chiamate non gestite*
+
+Sorgenti Video
+~~~~~~~~~~~~~~
+
+- il permesso generale abilita l'accesso alla sezione *sorgenti video* in |product_cti|
+- per ogni *sorgente video* configurata in |product| è possibile abilitare/disabilitare la visualizzazione
+
+Fuori Orario
+~~~~~~~~~~~~
+
+- il permesso generale abilita l'accesso alla sezione *fuori orario* di |product_cti| consentendo di cambiare il percorso delle proprie chiamate in entrata
+- :guilabel:`Fuori orario avanzato`, consente di modificare il *percorso della chiamata* in entrata dell'utente e delle rotte in entrata generiche
+- :guilabel:`Fuori orario completo`, consente la modifica di tutti i *percorsi delle chiamate* in arrivo
+
+Queue Manager
+~~~~~~~~~~~~~
+
+- il permesso generale abilita l'accesso alla sezione *QManager* in |product_cti|
+- per ogni *coda* configurata in |product| è possibile abilitare/disabilitare la visualizzazionea dello stato e dei dati
+
+Posto Operatore
+~~~~~~~~~~~~~~~
+
+- il permesso generale abilita l'accesso alla sezione *posto operatore* in |product_cti|
+- va abilitata una sola *coda* configurata in |product| da usare come sorgente delle chiamate da gestire
+
+
+Utenti
+------
+
+La pagina :guilabel:`Utenti` stabilisce per ogni singolo utente le
 impostazioni personali e i dispositivi associati.
 
 - :guilabel:`Profilo`, decide di quali permessi l'utente dispone, 
@@ -233,7 +376,7 @@ impostazioni personali e i dispositivi associati.
 
 - :guilabel:`Associa dispositivo`, consente di selezionare un telefono non
   ancora associato e assegnarlo all'utente tra quelli gestiti con il provisioning.
-  È possibile creare delle credenziali da utilizzare su di un dispositivo non supportato 
+  È possibile creare delle credenziali da utilizzare in un dispositivo non supportato 
   dal provisioning: in tal caso è necessario utilizzare un dispositivo personalizzato.
 
 Vengono poi mostrati i dispositivi associati all'utente.
@@ -301,55 +444,6 @@ sezioni sopra elencate questo è l'ordine di priorità decrescente che verrà se
 - :guilabel:`Impostazioni di Default`
 
 
-Fasci
-=====
-Nella sezione fasci è possibile configurare i gateway per gestire le linee fisiche o creare fascio VoIP specificando le credenziali delle linee SIP date dal provider.
-
-I fasci, per collegare i gateway o le linee VoIP, vengono creati utilizzando la libreria PJSIP.
-
-.. _fisici:
-
-Fisici
-------
-Come per i dispositivi, questa sezione scansiona la vostra rete e cerca dei gateway disponibili, una volta individuati è possibile specificare, selezionandone uno, due impostazioni:
-
-- Modello: specificare il modello del gateway
-- Impostazioni dinamiche in base al modello:
-
-  * ISDN (Specificare per la linea se è Point-Point or Point-MultiPoint)
-  * PRI
-  * FXS (Specificare per ogni porta, l'interno da assegnare scegliendo un utente precedentemente configurato)
-  * FXO (Specificare direttamente il numero, nel campo di testo)
-
-Una volta salvate le impostazioni è possibile caricare la configurazione sul gateway tramite il bottone "Carica"
-Il gateway prende la configurazione e si riavvia, vengono inoltre creati i fasci relativi.
-
-VoIP
-----
-È possibile creare dei fasci VoIP selezionando uno dei provider supportati, e inserendo le informazioni necessarie.
-
-Premere "Crea" per creare la configurazione relativa per quel fascio VoIP.
-
-Rotte
-=====
-Nella sezione rotte è possibile configurare le rotte in entrata e in uscita per il vostro centralino
-
-In entrata
-----------
-Una volta in questa sezione, vi si presenta la lista delle rotte già configurate, con la possibilità di modificarle o eliminarle.
-
-Premendo sul bottone "Crea nuova rotta" si apre una differente applicazione il Visual Plan, che vi consente di creare, modificare e collegare le varie componenti per gestire al meglio il flusso della chiamata su un determinato numero in ingresso.
-
-Premendo il simbolo di spunta nell'applicazione Visual Plan, la configurazione della vostra rotta verrà salvata e da quel momento potrete ricevere chiamate e indirizzare il flusso a seconda della vostra scelta.
-
-In uscita
----------
-In questa sezione è presente la lista delle rotte in uscita presenti, la prima volta che questa pagina viene visitata, il wizard vi propone delle rotte in uscita di default con i pattern di chiamate specifici per le diverse lingue.
-
-È possibile inoltre specificare l'ordine con cui usare i fasci, precedentemente creati, e regolare così in maniera personalizzata il percorso delle chiamate in uscita.
-
-Premendo il tasto "Salva" la configurazione viene scritta nel centralino e da quel momento è possibile effettuare chiamate verso l'esterno (avendo opportunamente configurato i fasci negli step precedenti).
-
 Amministrazione
 ===============
 
@@ -400,6 +494,7 @@ La sezione Avanzate consente l'accesso diretto all'interfaccia avanzata di |prod
 
 Report
 ------
+
 La sezione "Report" riporta l'elenco completo degli utenti del centralino specificando il loro:
 
 - Interno

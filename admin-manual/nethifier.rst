@@ -7,7 +7,7 @@ l'integrazione di |product| con il desktop Windows. In particolare consente la v
 di popup di notifica nel desktop in corrispondenza della ricezione di telefonate dirette a un
 qualsiasi interno telefonico dell'utente.
 
-Versioni di Windows compatibili: Windows 7 (64 bit), Windows 8 e Windows 10.
+Versioni di Windows compatibili: Windows 7 (64 bit), Windows 8, Windows 10, Windows 11.
 
 Per la personalizzazione dei popup seguire la :ref:`documentazione <custom-nethifier-label>`.
 
@@ -16,9 +16,10 @@ Requisiti
 
 - .NET Framework 4.5.
 - Server |product| 3.x.
-- Il pc su cui è in esecuzione |product_nethifier| deve risolvere l'indirizzo ``nomenethvoice.dominio``.
+- Il pc su cui è in esecuzione |product_nethifier| deve risolvere l'indirizzo FQDN di |product|.
+- il pc su cui è in esecuzione |product_nethifier| deve raggiungere il |product| sulla porta 8183 TCP usata per una connessione criptata, se non avviene la comunicazione il |product_nethifier| proverà a raggiungere il |product| sulla porta 8182 TCP con una connessione NON criptata. 
 
-.. note:: Per ottenere il nome di dominio si può utilizzare il comando ``hostname -f``
+.. note:: Per ottenere l'indirizzo FQDN si può utilizzare il comando ``hostname -f``
 
 Download
 ========
@@ -34,7 +35,7 @@ avviato automaticamente.
 
 Per poter essere eseguito |product_nethifier| necessita di privilegi amministrativi perciò è necessario ricordarsi di installarlo utilizzando l'opzione "Esegui come amministratore".
 
-.. warning:: Durante l'installazione su Windows 10 verrà mostrato un avviso di sicurezza di Windows Defender SmartScreen. È sufficiente cliccare la voce "Esegui comunque" e continuare nelle fasi successive. Qua maggiori `informazioni <https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-defender-smartscreen-set-individual-device>`_.
+.. warning:: Durante l'installazione su Windows 10/11 verrà mostrato un avviso di sicurezza di Windows Defender SmartScreen. È sufficiente cliccare la voce "Esegui comunque" e continuare nelle fasi successive. Qua maggiori `informazioni <https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-smartscreen/windows-defender-smartscreen-set-individual-device>`_.
 
 Configurazione
 ==============
@@ -46,6 +47,44 @@ Configurazione
 
 È necessario salvare i dati cliccando il pulsante apposito in maniera tale da non doverli più reinserire
 agli avvii successivi. È anche possibile attivare l'esecuzione automatica di |product_nethifier| all'avvio di Windows.
+
+
+Utilizzo di cuffie USB con tasti funzione
+-----------------------------------------
+
+È possibile utilizzare dispositivi USB Telephony Headset con tasti funzione per rispondere ad una chiamata o terminarla, utilizzando il tasto ON/OFF HOOK.
+
+Modelli Headset USB supportati
+==============================
+
+I modelli sottostanti sono stati provati e funzionano correttamente, potrebbero essere supportati i dispositivi conformi alle specifiche "USB Telephony Headset" con mappatura del pulsante ON/OFF HOOK.
+
+Yealink
+-------
+
+* UH 36
+
+Sennheiser
+----------
+
+* SC 30 USB
+* SC 130 USB
+
+Jabra
+-----
+
+* HSC016
+
+Logitech
+--------
+
+* H650e USB
+
+Snom
+----
+
+* A330M USB
+* A330D USB
 
 Combinazione tasti chiamata
 ---------------------------
@@ -71,6 +110,10 @@ attraverso i seguenti template HTML: ::
 
 Il primo serve a mostrare i dati di una chiamata generica, mentre il secondo quelli di una sorgente video,
 quale ad esempio un videocitofono.
+
+Se personalizzati tali template andranno copiati e poi modificati nel seguente percorso: ::
+
+ /var/lib/nethserver/nethcti/static/templates/notification_popup/
 
 .. note:: Conoscenze richieste: linguaggi di programmazione HTML, CSS e Javascript.
 
